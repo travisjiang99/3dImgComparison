@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<positions>
+    <position Type="01" ID="01">
+        <x>1482</x>
+        <y>823</y>
+        <width>85</width>
+        <height>73</height>
+        <value>0.00</value>
+    </position>
+    <position Type="01" ID="01">
+        <x>1708</x>
+        <y>811</y>
+        <width>93</width>
+        <height>112</height>
+        <value>0.00</value>
+    </position>
+    <position Type="01" ID="01">
+        <x>1966</x>
+        <y>825</y>
+        <width>66</width>
+        <height>67</height>
+        <value>0.00</value>
+    </position>
+</positions>

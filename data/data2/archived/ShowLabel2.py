@@ -1,0 +1,64 @@
+# 从.ini文件读取标签信息并在图像上显示
+import configparser
+import cv2
+import matplotlib.pyplot as plt
+import os
+import matplotlib
+import xml.etree.ElementTree as ET
+
+# 设置matplotlib默认字体为Noto Sans CJK系列，确保中文正常显示
+matplotlib.rcParams['font.family'] = 'Noto Sans CJK JP'
+
+# 文件路径
+ini_path = os.path.join(os.path.dirname(__file__), 'F-T1-20250408-SHJCL05004-10-01-02-03-1-L0-5.ini')
+#ini_path = os.path.join(os.path.dirname(__file__), '../data1/T1-SHJCL-10-01-02-03-1-L0-5.ini')
+img_path = os.path.join(os.path.dirname(__file__), 'F-T1-20250408-SHJCL05004-10-01-02-03-1-L0-5.jpg')
+
+# 读取ini文件
+config = configparser.ConfigParser()
+config.read(ini_path, encoding='utf-8')
+
+# 读取图片
+img = cv2.imread(img_path)
+if img is None:
+    raise FileNotFoundError(f"图片文件未找到: {img_path}")
+
+# 1.读取并解析INI文件，提取矩形框和标签
+rect_num = int(config['FastPara']['RectNum'])
+for i in range(rect_num):
+    section = f'RectPara-{i}'
+    if section not in config:
+        continue
+    x = int(config[section]['XValue'])
+    y = int(config[section]['YValue'])
+    w = int(config[section]['WidthValue'])
+    h = int(config[section]['HeightValue'])
+    part_name = config[section].get('PartName', f'Part-{i}')
+    # 绘制矩形框（ini，绿色）
+    cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
+    # 绘制标签（ini，红色）
+    cv2.putText(img, part_name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+
+# 2.读取并解析XML文件，提取目标框和标签
+xml_path = os.path.join(os.path.dirname(__file__), 'F-T1-20250408-SHJCL05004-10-01-02-03-1-L0-5.xml')
+if os.path.exists(xml_path):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    print('XML所有标签:', [elem.tag for elem in root.iter()])
+    for pos in root.findall('position'):
+        x = int(float(pos.find('x').text))
+        y = int(float(pos.find('y').text))
+        w = int(float(pos.find('width').text))
+        h = int(float(pos.find('height').text))
+        label = pos.find('value').text if pos.find('value') is not None else 'XML-Pos'
+        print(f'XML: {label}, ({x},{y},{w},{h})')
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.putText(img, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 0, 0), 2)
+
+# BGR转RGB用于matplotlib显示
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+plt.figure(figsize=(12, 8))
+plt.imshow(img_rgb)
+plt.axis('off')
+plt.title('标签显示结果')
+plt.show()
