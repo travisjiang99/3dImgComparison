@@ -29,6 +29,15 @@
   - `showPicLabel(ini).py`: 用于显示INI格式标签的脚本。
   - `showPicLabel(xml).py`: 用于显示XML格式标签的脚本。
 
+## 运行结果
+- `LabelTransferDraw_2d.py`实现标注框转移：
+![标注框映射](https://github.com/user-attachments/assets/7960fd4e-c214-470e-ba44-93c92ae74f60)
+- `Corres3dShow.py`实现标注框3D点云提取和背景、噪点滤除：
+![对应点云2](https://github.com/user-attachments/assets/964bb48a-9764-4e12-a4ce-94d88462175b)
+- `PicCompare3d.py`实现点云匹配和差异比较：
+![2025-06-11 13-09-02 的屏幕截图](https://github.com/user-attachments/assets/5377ea41-12d4-407c-a047-d967518b0f96)
+
+
 ## 使用说明
 
 - 数据文件位于 `data/` 文件夹中，可用于测试和验证算法。
